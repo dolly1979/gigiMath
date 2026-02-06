@@ -1,0 +1,148 @@
+﻿@page "/subtraction"
+@using System
+@using Gigi.Services
+
+<h2 class="mb-4 text-xl font-bold">Subtraction</h2>
+
+<!-- Scoreboard -->
+@* <div class="mb-4 rounded-lg border border-yellow-400 bg-yellow-100 p-3 shadow">
+    <p class="text-lg font-bold">⭐ Score: @score / @totalQuestions</p>
+
+    @if (badge != null)
+    {
+        <p class="mt-2 text-lg">🎖️ Reward Unlocked: <span class="font-bold">@badge</span></p>
+    }
+</div>*@
+
+<div class="bg-subtraction flex-col items-center justify-center rounded-3xl p-3 text-center text-white shadow-xl">
+
+    <!-- Visual Representation -->
+@*     <div class="mb-6 flex items-center justify-center space-x-14">
+        <!-- First number blocks -->
+        <div class="flex h-32 items-center justify-center rounded-lg bg-white/10 p-2 shadow-inner">
+            <div class="grid grid-cols-5 gap-x-2 gap-y-1">
+                @for (int i = 0; i < (num1 - num2); i++)
+                {
+                    <div class="animate-pop h-6 w-6 rounded-md border border-white/40 bg-blue-500 shadow-md"></div>
+                }
+                @for (int i = 0; i < num2; i++)
+                {
+                    <div class="@($"animate-pop animate-pop h-6 w-6 rounded-md border border-white/40 bg-red-500 shadow-md {(answered && userAnswer == correctAnswer ? " fade-out" : "")}")"></div>
+                }
+            </div>
+        </div>
+    </div> *@
+
+    <!-- Visual Representation -->
+    <div class="mb-6 flex items-center justify-center">
+        <div class="flex h-32 items-center justify-center rounded-lg bg-white/10 p-4 shadow-inner">
+            <div class="grid grid-cols-5 gap-x-2 gap-y-1">
+                @for (int i = 0; i < num1 - num2; i++)
+                {
+                    <div class="@($"animate-pop h-6 w-6 rounded-md border border-white/40 bg-blue-500 shadow-md {(answered && userAnswer == correctAnswer ? "animate-bounce-once" : "")}")"></div>
+                }
+
+                @for (int i = 0; i < num2; i++)
+                {
+                    <div class="@($"animate-pop h-6 w-6 rounded-md border border-white/40 bg-red-500 shadow-md {(answered && userAnswer == correctAnswer ? "fade-out" : "")}")"></div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Question -->
+    <div class="mb-4 text-5xl font-extrabold tracking-wider">@num1 - @num2</div>
+
+    <!-- Input box -->
+    <input type="number"
+           @bind="userAnswer"
+           class="placeholder-white mb-6 w-32 rounded-full border border-white bg-white/20 p-2 text-center text-white focus:bg-white/30 focus:outline-none"
+           placeholder="?" />
+
+    <!-- Buttons -->
+    @if (!answered)
+    {
+        <button @onclick="CheckAnswer"
+                class="bubble-btn bg-blue-500 hover:bg-blue-600">
+            ✅ Check Answer
+        </button>
+    }
+
+    @if (feedback != null)
+    {
+        <p class="mt-4 text-lg font-semibold">@feedback</p>
+    }
+</div>
+
+@code {
+    private Random rnd = new Random();
+    private int num1=0;
+    private int num2=0;
+    private int correctAnswer;
+    private int? userAnswer;
+    private string feedback = string.Empty;
+    private bool answered = false;
+    // Score tracking
+    private int score = 0;
+    private int totalQuestions = 0;
+    private string badge;
+    private static List<string> unlockedRewards = new List<string>();
+
+    protected override void OnInitialized()
+    {
+        GenerateQuestion();
+    }
+
+    private void GenerateQuestion()
+    {
+        num1 = rnd.Next(1, 25);
+        num2 = rnd.Next(1, num1);
+        correctAnswer = num1 - num2;
+        userAnswer = null;
+        answered = false;
+        feedback = string.Empty;
+    }
+
+    private async void CheckAnswer()
+    {
+        totalQuestions++;
+        if (userAnswer == correctAnswer)
+        {
+            feedback = "🎉 Correct! Great job!";
+            score++; //add point
+            RewardService.AddStars(10); // ⭐ 10 stars per correct answer
+            //CheckForReward();
+        }
+        else
+        {
+            feedback = $"❌ Oops! The right answer was {correctAnswer}.";
+        }
+        answered = true;
+        //Wait a moment before showing next question (1.5 seconds)
+        await Task.Delay(1500);
+        GenerateQuestion();
+        StateHasChanged(); //ensure UI updates after delay
+    }
+
+    private void CheckForReward()
+    {
+        // if (score == 5)
+        // {
+        //     badge = "⭐ Math Star";
+        //     RewardService.AddReward(badge);
+        // }
+        // else if (score == 10)
+        // {
+        //     badge = "🏆 Math Champion";
+        //     RewardService.AddReward(badge);
+        // }
+        // else if (score > 20)
+        // {
+        //     badge = "👑 Math Master";
+        //     RewardService.AddReward(badge);
+        // }
+    }
+
+    // Expose rewards list for other pages
+    public static List<string> GetUnlockedRewards() => unlockedRewards;
+}

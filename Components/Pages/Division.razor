@@ -1,0 +1,143 @@
+﻿@page "/division"
+@using System
+@using Gigi.Services
+
+<h2 class="mb-4 text-xl font-bold">Division</h2>
+
+<!-- Scoreboard -->
+@* <div class="mb-4 rounded-lg border border-yellow-400 bg-yellow-100 p-3 shadow">
+    <p class="text-lg font-bold">⭐ Score: @score / @totalQuestions</p>
+
+    @if (badge != null)
+    {
+        <p class="mt-2 text-lg">🎖️ Reward Unlocked: <span class="font-bold">@badge</span></p>
+    }
+</div> *@
+
+<div class="bg-division flex-col items-center justify-center rounded-3xl p-3 text-center text-white shadow-xl">
+
+    <!-- Visual Representation -->
+    <div class="mb-6 flex items-center justify-center">
+        <div class="flex items-center justify-center rounded-lg bg-white/10 p-4 shadow-inner">
+            <div class="grid gap-2" style="@($"grid-template-columns: repeat({num2}, minmax(0, 1fr));")">
+                @for (int i = 0; i < num1; i++)
+                {
+                    @* var color = (answered && userAnswer == correctAnswer) ? "bg-emerald-500 animate-bounce-once" : "bg-blue-500";
+                    <div class="@($"h-6 w-6 rounded-md border border-white/40 {color} shadow-md animate-pop")"></div> *@
+                    var color = i % num2 == 0 ? "bg-yellow-500" : "bg-green-500";
+                    <div class="@($"h-6 w-6 rounded-md border border-white/40 {color} shadow-md animate-pop {(answered && userAnswer == correctAnswer ? "animate-bounce-once" : "")}")"></div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Question -->
+    <div class="mb-4 text-5xl font-extrabold tracking-wider">@num1 ÷ @num2</div>
+
+    <!-- Input box -->
+    <input type="number"
+           @bind="userAnswer"
+           class="placeholder-white mb-6 w-32 rounded-full border border-white bg-white/20 p-2 text-center text-white focus:bg-white/30 focus:outline-none"
+           placeholder="?" />
+
+    <!-- Buttons -->
+    @if (!answered)
+    {
+        <button @onclick="CheckAnswer"
+                class="bubble-btn bg-blue-500 hover:bg-blue-600">
+            ✅ Check Answer
+        </button>
+    }
+
+    @if (feedback != null)
+    {
+        <p class="mt-4 text-lg font-semibold">@feedback</p>
+    }
+</div>
+
+@code {
+    private Random rnd = new Random();
+    private int num1=0;
+    private int num2=0;
+    private int correctAnswer;
+    private string question = string.Empty;
+    private int? userAnswer;
+    private string feedback = string.Empty;
+    private bool answered = false;
+    private bool fadingOut = false;
+    // Score tracking
+    private int score = 0;
+    private int totalQuestions = 0;
+    private string badge;
+    private static List<string> unlockedRewards = new List<string>();
+
+    protected override void OnInitialized()
+    {
+        GenerateQuestion();
+    }
+
+    private void GenerateQuestion()
+    {
+        num2 = rnd.Next(2, 6);
+        correctAnswer = rnd.Next(2, 6);
+        num1 = num2 * correctAnswer; //ensure even division
+        userAnswer = null;
+        answered = false;
+        feedback = string.Empty;
+    }
+
+    private async void CheckAnswer()
+    {
+        totalQuestions++;
+        if (userAnswer == correctAnswer)
+        {
+            feedback = "🎉 Correct! Great job!";
+            score++; // add point
+            RewardService.AddStars(20); // ⭐ 10 stars per correct answer
+            //CheckForReward();
+        }
+        else
+        {
+            feedback = $"❌ Oops! The right answer was {correctAnswer}.";
+        }
+        answered = true;
+        StateHasChanged();
+
+        // wait a moment to show the feedback, then fade out
+        await Task.Delay(1200);
+        fadingOut = true;
+        StateHasChanged();
+
+        // wait for fade animation
+        await Task.Delay(600);
+        fadingOut = false;
+        GenerateQuestion();
+        StateHasChanged();
+        //answered = true; // show Next button
+        //Wait a moment before showing next question (1.5 seconds)
+        // await Task.Delay(1200);
+        // GenerateQuestion();
+        // StateHasChanged(); //ensure UI updates after delay
+    }
+    private void CheckForReward()
+    {
+        // if (score == 5)
+        // {
+        //     badge = "⭐ Math Star";
+        //     RewardService.AddReward(badge);
+        // }
+        // else if (score == 10)
+        // {
+        //     badge = "🏆 Math Champion";
+        //     RewardService.AddReward(badge);
+        // }
+        // else if (score > 20)
+        // {
+        //     badge = "👑 Math Master";
+        //     RewardService.AddReward(badge);
+        // }
+    }
+
+    // Expose rewards list for other pages
+    public static List<string> GetUnlockedRewards() => unlockedRewards;
+}

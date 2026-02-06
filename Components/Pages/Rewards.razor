@@ -1,0 +1,82 @@
+﻿@page "/rewards"
+@using Gigi.Services
+
+@* <h2 class="mb-4 text-2xl font-bold">🎖️ My Rewards</h2>
+
+@if (rewards.Count == 0)
+{
+    <p>No rewards unlocked yet. Play quizzes to earn badges! 🎯</p>
+}
+else
+{
+    <div class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+        @foreach (var reward in rewards)
+        {
+            <div class="rounded-xl bg-gradient-to-r from-yellow-200 to-yellow-400 p-4 text-center shadow-lg">
+                <span class="text-3xl">@reward</span>
+            </div>
+        }
+    </div>
+
+    <button class="rounded-lg bg-red-500 px-4 py-2 font-bold text-white shadow transition hover:bg-red-600"
+            @onclick="ResetRewards">
+        🔄 Reset Progress
+    </button>
+} *@
+
+<div class="flex min-h-screen flex-col items-center bg-gradient-to-br from-yellow-200 to-orange-300 p-8 text-center text-gray-800">
+    <h1 class="mb-6 text-3xl font-bold">🏆 My Rewards</h1>
+
+    <div class="mb-6 w-full max-w-md rounded-3xl bg-white/30 p-6 shadow-lg backdrop-blur-md">
+        <h2 class="mb-3 text-2xl font-semibold text-yellow-800">⭐ Total Stars</h2>
+        <div class="text-4xl font-bold text-yellow-600">⭐ @points</div>
+    </div>
+
+    <div class="mb-6 w-full max-w-md rounded-3xl bg-white/30 p-6 shadow-lg backdrop-blur-md">
+        <h2 class="mb-3 text-2xl font-semibold text-green-800">🎖️ Badges</h2>
+        @if (RewardService.UnlockedBadges.Count == 0)
+        {
+            <p>No badges yet. Keep practicing!</p>
+        }
+        else
+        {
+            <ul>
+                @foreach (var badge in RewardService.UnlockedBadges)
+                {
+                    <li class="mb-2">🏅 @badge</li>
+                }
+            </ul>
+        }
+    </div>
+
+    <NavLink href="/prizes" class="mt-4 inline-block rounded-full bg-orange-500 px-6 py-2 font-bold text-white shadow-lg transition hover:bg-orange-600">
+        Go to Prize Store 🛍️
+    </NavLink>
+</div>
+
+@code {
+    private List<string> rewards = new();
+    private int points;
+
+    protected override void OnInitialized()
+    {
+        rewards = RewardService.GetRewards();
+        points = RewardService.GetPoints();
+    }
+}
+
+@* @code {
+    private List<string> rewards = new();
+
+    protected override void OnInitialized()
+    {
+        rewards = RewardService.GetRewards();
+    }
+
+    private void ResetRewards()
+    {
+        RewardService.ResetRewards();
+        rewards = RewardService.GetRewards();
+        StateHasChanged();
+    }
+} *@

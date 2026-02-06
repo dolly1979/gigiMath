@@ -1,0 +1,77 @@
+﻿@page "/prizes"
+@using Gigi.Services
+
+<div class="flex min-h-screen flex-col items-center bg-gradient-to-br from-pink-200 to-purple-300 p-8 text-center text-gray-800">
+    <h1 class="mb-6 text-3xl font-bold">🎁 Prize Store</h1>
+    <p class="mb-6 text-lg font-semibold">You have ⭐ @points stars</p>
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        @foreach (var prize in prizes)
+        {
+            <div class="rounded-3xl bg-white/40 p-6 shadow-lg backdrop-blur-md">
+                <h3 class="mb-2 text-xl font-bold">@prize.Name</h3>
+                <p class="mb-4">Cost: ⭐ @prize.Cost</p>
+
+                @if (RewardService.OwnedPrizes.Contains(prize.Name))
+                {
+                    <button class="rounded-full bg-gray-400 px-4 py-2 text-white" disabled>✅ Owned</button>
+                }
+                else if (RewardService.TotalStars >= prize.Cost)
+                {
+                    <button class="rounded-full bg-green-500 px-4 py-2 text-white hover:bg-green-600"
+                            @onclick="() => BuyPrize(prize)">
+                        Buy 🛒
+                    </button>
+                }
+                else
+                {
+                    <button class="rounded-full bg-red-400 px-4 py-2 text-white" disabled>Not enough stars</button>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+     private int points;
+    private string message = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        points = RewardService.GetPoints();
+    }
+
+    private void BuyPrize(int cost)
+    {
+        if (RewardService.SpendPoints(cost))
+        {
+            message = "🎉 Purchase successful!";
+            points = RewardService.GetPoints();
+        }
+        else
+        {
+            message = "❌ Not enough points!";
+        }
+    }
+    // private List<Prize> prizes = new()
+    // {
+    //     new Prize { Name = "🐶 Cute Pet", Cost = 100 },
+    //     new Prize { Name = "🎩 Fancy Hat", Cost = 80 },
+    //     new Prize { Name = "🕶️ Cool Sunglasses", Cost = 50 },
+    //     new Prize { Name = "🚀 Rocket Badge", Cost = 120 },
+    //     new Prize { Name = "🦄 Magic Unicorn", Cost = 200 }
+    // };
+
+    // private void BuyPrize(Prize prize)
+    // {
+    //     RewardService.SpendStars(prize.Cost);
+    //     RewardService.AddPrize(prize.Name);
+    //     StateHasChanged();
+    // }
+
+    // public class Prize
+    // {
+    //     public string Name { get; set; }
+    //     public int Cost { get; set; }
+    // }
+}

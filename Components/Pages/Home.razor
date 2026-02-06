@@ -1,0 +1,98 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Components
+
+<div class="home-container">
+    <h1 class="mb-6 text-center text-3xl font-bold">🏠 Welcome to Gigi Math!</h1>
+    <p class="mt-4 text-center text-gray-700">Choose what you want to play and learn 🎓</p>
+
+    <div class="flex min-h-screen flex-col items-center bg-gradient-to-br from-blue-300 to-indigo-400 p-6">
+        <h1 class="mb-8 text-3xl font-bold text-white">🎓 Math Practice</h1>
+
+        <div class="grid w-full max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+
+            <!-- Addition -->
+            <NavLink href="/addition" class="block no-underline">
+            <div class="rounded-3xl bg-white/20 p-6 shadow-lg backdrop-blur-md transition hover:shadow-2xl">
+                <div class="flex flex-col items-center">
+                    <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-green-500 shadow-md">
+                        <span class="text-4xl font-bold text-white">+</span>
+                    </div>
+                    <h2 class="text-xl font-bold text-white">Addition</h2>
+                    <p class="mb-4 text-sm text-blue-100">Add numbers together!</p>
+                    <div class="rounded-xl bg-white/30 px-4 py-2 font-semibold text-white">5 + 3 = ?</div>
+                </div>
+            </div>
+            </NavLink>
+
+            <!-- Subtraction -->
+            <NavLink href="/subtraction" class="block no-underline">
+            <div class="rounded-3xl bg-white/20 p-6 shadow-lg backdrop-blur-md transition hover:shadow-2xl">
+                <div class="flex flex-col items-center">
+                    <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-pink-500 shadow-md">
+                        <span class="text-4xl font-bold text-white">−</span>
+                    </div>
+                    <h2 class="text-xl font-bold text-white">Subtraction</h2>
+                    <p class="mb-4 text-sm text-blue-100">Take numbers away!</p>
+                    <div class="rounded-xl bg-white/30 px-4 py-2 font-semibold text-white">10 − 4 = ?</div>
+                </div>
+            </div>
+            </NavLink>
+
+            <!-- Multiplication -->
+            <NavLink href="/multiplication" class="block no-underline">
+            <div class="rounded-3xl bg-white/20 p-6 shadow-lg backdrop-blur-md transition hover:shadow-2xl">
+                <div class="flex flex-col items-center">
+                    <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-cyan-500 shadow-md">
+                        <span class="text-4xl font-bold text-white">×</span>
+                    </div>
+                    <h2 class="text-xl font-bold text-white">Multiplication</h2>
+                    <p class="mb-4 text-sm text-blue-100">Times tables fun!</p>
+                    <div class="rounded-xl bg-white/30 px-4 py-2 font-semibold text-white">4 × 6 = ?</div>
+                </div>
+            </div>
+            </NavLink>
+
+            <!-- Division href="/division"-->
+            <NavLink href="/division" class="block hover:no-underline">
+            <div class="rounded-3xl bg-white/20 p-6 shadow-lg backdrop-blur-md transition hover:shadow-2xl">
+                <div class="flex flex-col items-center">
+                    <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500 shadow-md">
+                        <span class="text-4xl font-bold text-white">÷</span>
+                    </div>
+                    <h2 class="text-xl font-bold text-white">Division</h2>
+                    <p class="mb-4 text-sm text-blue-100">Share equally!</p>
+                    <div class="rounded-xl bg-white/30 px-4 py-2 font-semibold text-white">12 ÷ 3 = ?</div>
+                </div>
+            </div>
+            </NavLink>
+
+            <!-- Rewards -->
+            <NavLink href="/rewards" class="block hover:no-underline">
+                <div class="rounded-3xl bg-white/20 p-6 shadow-lg backdrop-blur-md transition hover:shadow-2xl">
+                    <div class="flex flex-col items-center">
+                        <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-yellow-400 shadow-md">
+                            <span class="text-4xl font-bold text-white">⭐</span>
+                        </div>
+                        <h2 class="text-xl font-bold text-white">Rewards</h2>
+                        <p class="mb-4 text-sm text-blue-100">See your stars and badges!</p>
+                        <div class="rounded-xl bg-white/30 px-4 py-2 font-semibold text-white">🏆 My Rewards</div>
+                    </div>
+                </div>
+            </NavLink>
+
+            <!-- Prize Store -->
+            <NavLink href="/prizes" class="block hover:no-underline">
+                <div class="rounded-3xl bg-white/20 p-6 shadow-lg backdrop-blur-md transition hover:shadow-2xl">
+                    <div class="flex flex-col items-center">
+                        <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-500 shadow-md">
+                            <span class="text-4xl font-bold text-white">🎁</span>
+                        </div>
+                        <h2 class="text-xl font-bold text-white">Prize Store</h2>
+                        <p class="mb-4 text-sm text-blue-100">Trade stars for fun prizes!</p>
+                        <div class="rounded-xl bg-white/30 px-4 py-2 font-semibold text-white">🛍️ Go Shopping</div>
+                    </div>
+                </div>
+            </NavLink>
+        </div>
+    </div>
+</div>
